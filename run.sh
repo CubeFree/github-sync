@@ -1,0 +1,1 @@
+/app/src/github-sync.php sync $GITHUB_SRC_REPO $GITHUB_DEST_REPO --token=$GITHUB_TOKEN
