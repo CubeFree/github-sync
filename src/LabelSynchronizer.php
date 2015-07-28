@@ -35,25 +35,25 @@ class LabelSynchronizer extends AbstractSynchronizer
                     $label1['color'],
                     $label2['color']
                 ));
-
-                if ($this->confirm('Do you want to update the name and color of the label?')) {
-                    $this->updateLabel($to, $label2['name'], $label1['name'], $label1['color']);
-                }
+                $this->updateLabel($to, $label2['name'], $label1['name'], $label1['color']);
+                // if ($this->confirm('Do you want to update the name and color of the label?')) {
+                    
+                // }
             })
             ->whenMissingRight(function ($label) use ($to) {
                 $this->output->writeln(sprintf('Missing label <info>%s</info> from %s', $label['name'], $to));
-
-                if ($this->confirm('Do you want to create this missing label?')) {
-                    $this->createLabel($to, $label['name'], $label['color']);
-                }
-            })
-            ->whenMissingLeft(function ($label) use ($to) {
-                $this->output->writeln(sprintf('Extra label <info>%s</info> in %s', $label['name'], $to));
-
-                if ($this->confirm('Do you want to <fg=red>delete</fg=red> this extra label?')) {
-                    $this->deleteLabel($to, $label['name']);
-                }
+                $this->createLabel($to, $label['name'], $label['color']);
+                // if ($this->confirm('Do you want to create this missing label?')) {
+                    
+                // }
             });
+            // ->whenMissingLeft(function ($label) use ($to) {
+            //     $this->output->writeln(sprintf('Extra label <info>%s</info> in %s', $label['name'], $to));
+
+            //     if ($this->confirm('Do you want to <fg=red>delete</fg=red> this extra label?')) {
+            //         $this->deleteLabel($to, $label['name']);
+            //     }
+            // });
 
         $comparator->compare($fromLabels, $toLabels);
     }
