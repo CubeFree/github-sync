@@ -43,13 +43,36 @@ class IssuesSynchronizer extends AbstractSynchronizer
             })
             ->whenMissingRight(function ($issue) use ($to , $toMilestones) {
                 $this->output->writeln(sprintf('Missing issue <info>%s</info> from %s', $issue['title'], $to));
-                
-                $milestoneNumer = $this->getMilestoneNumer($toMilestones, $issue['milestone']);
-                
-                $this->createIssue($to, $issue['title'], $issue['body'], $milestoneNumer, $issue['labels']);
+
+                if ($this->checkMigrate($issue)){
+
+                    $milestoneNumer = $this->getMilestoneNumer($toMilestones, $issue['milestone']);
+                    $this->createIssue($to, $issue['title'], $issue['body'], $milestoneNumer, $issue['labels']);
+                }else{
+                     $this->output->writeln(sprintf('Issue not migrated'));
+                }
             });
 
         $comparator->compare($fromIssues, $toIssues);
+    }
+
+    private function checkMigrate($issue) 
+    {
+        $excludedLabels = ["ios","android","parse"];
+
+        for ($i = 0; $i < sizeof($issue['labels']); $i++) {
+            $label = $issue['labels'][$i];
+
+            $name = strtolower($label["name"]);
+
+            if (in_array($name, $excludedLabels)) {
+                return false;
+            }
+
+        } 
+
+        return true;
+
     }
 
     private function getMilestoneNumer($arrMiletones, $milestone) {
